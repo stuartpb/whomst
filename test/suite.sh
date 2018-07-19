@@ -7,7 +7,9 @@ hole="$testdir/$(mktemp -d)"
 export PATH="$hole:$PATH"
 
 disable_posix () {
-  mv node_modules/posix node_modules/posix~
+  if [[ -e node_modules/posix ]]; then
+    mv node_modules/posix node_modules/posix~
+  fi
 }
 disable_getent () {
   touch "$hole/getent"

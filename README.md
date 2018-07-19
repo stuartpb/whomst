@@ -16,8 +16,8 @@ whomst will try obtaining info, in order of availability, from:
 [userid]: https://github.com/jandre/node-userid
 [uid-number]: https://github.com/npm/uid-number
 
-As of this initial release (v0.1.0), not all of these code paths have been
-tested (though they are all believed to be implemented).
+As of v0.1.2, not all of these code paths have been tested (though they are all
+believed to be implemented).
 
 ## API
 

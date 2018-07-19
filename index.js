@@ -27,7 +27,7 @@ try {
 
 function mapToFields(content, func) {
   return content.trim().split('\n').map(
-    line => line.split(':').map(func));
+    line => func(line.split(':')));
 }
 
 function dbifyPasswd(content) {
@@ -51,15 +51,20 @@ function dbifyGroup(content) {
   }));
 }
 
+function userInfoToPosixStruct(info) {
+  return {
+    name: info.username,
+    uid: info.uid,
+    gid: info.gid,
+    dir: info.homedir,
+    shell: info.shell
+  };
+}
+
 function currentUserOrBust(name) {
   const current = userInfo();
-  return (current.username == name || current.uid == name) ? {
-    name: current.username,
-    uid: current.uid,
-    gid: current.gid,
-    dir: current.homedir,
-    shell: current.shell
-  } : null;
+  return (current.username == name || current.uid == name) ?
+    userInfoToPosixStruct(current) : null;
 }
 
 const setidHackScript = require.resolve("./setid-hack.js");
@@ -70,7 +75,7 @@ function setidHack(uid, gid) {
       .then(output => JSON.parse(output))
       .then(result=>{
         if (result.error) throw new Error(result.error);
-        else return result;
+        else return userInfoToPosixStruct(result);
       });
   } else return Promise.reject();
 }
@@ -80,7 +85,7 @@ function setidHackSync(uid, gid) {
     let result = execFileSync(process.execPath, [setidHackScript, uid, gid]);
     result = JSON.parse(result);
     if (result.error) throw new Error(result.error);
-    else return result;
+    else return userInfoToPosixStruct(result);
   } else throw null;
 }
 
