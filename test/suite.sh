@@ -3,7 +3,7 @@
 testdir="$(dirname "${BASH_SOURCE[0]}")"
 
 # create a new search directory to test with commands like `getent` broken
-hole="$testdir/$(mktemp -d)"
+hole="$(mktemp -d)"
 export PATH="$hole:$PATH"
 
 disable_posix () {
@@ -16,7 +16,7 @@ disable_getent () {
   chmod -x "$hole/getent"
 }
 
-cleanup () {
+reset () {
   # reverse disable_posix
   # If there's a backed-up posix module to cleanup
   if [[ -e node_modules/posix~ ]]; then
@@ -31,8 +31,17 @@ cleanup () {
     fi
   fi
 
+  # reverse disable_getent
+  if [[ -e "$hole/getent" ]]; then
+    rm "$hole/getent"
+  fi
+}
+
+cleanup () {
+  reset
+
   # clean up temporary directories
-  rm -r "$hole"
+  rmdir "$hole"
 }
 
 catch () {
@@ -59,15 +68,27 @@ test_group () {
 
 stress_test_user () {
   test_user "$@"
+  disable_posix
+  test_user "$@"
+  disable_getent
+  test_user "$@"
+  reset
 }
 
 stress_test_group () {
   test_group "$@"
+  disable_posix
+  test_group "$@"
+  disable_getent
+  test_group "$@"
+  reset
 }
 
+reset
 
-test_user "$USER" "$UID"
-test_group "$(id -gn)" "$(id -g)"
-# TODO: test every user/group we can get from getent
+getent passwd | shuf -n 5 | sed -r 's/^([^:]*):[^:]:([^:]*):.*/\1 \2/' | \
+   while read name uid; do stress_test_user "$name" "$uid"; done
+getent group | shuf -n 5 | sed -r 's/^([^:]*):[^:]:([^:]*):.*/\1 \2/' | \
+   while read name gid; do stress_test_group "$name" "$gid"; done
 
 cleanup
