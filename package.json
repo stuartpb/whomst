@@ -41,7 +41,5 @@
   "optionalDependencies": {
     "posix": "^4.1.2"
   },
-  "devDependencies": {
-    "blue-tape": "^1.0.0"
-  }
+  "devDependencies": {}
 }
