@@ -2,7 +2,7 @@
 
 Gets user and group info, by any means necessary
 
-![whomst](https://user-images.githubusercontent.com/572196/42920811-7881652c-8acd-11e8-9a30-57c29baf9a78.jpg)
+![whomst](https://user-images.githubusercontent.com/572196/42921299-331bb322-8ad0-11e8-8cc2-b0713b1871fe.jpg)
 
 ## Background
 
