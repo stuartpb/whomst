@@ -1,0 +1,47 @@
+{
+  "name": "whomst",
+  "version": "0.1.0",
+  "description": "Module to get user (passwd) and group info, with lots of fallbacks",
+  "main": "index.js",
+  "scripts": {
+    "test": "test/suite.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stuartpb/whomst.git"
+  },
+  "keywords": [
+    "user",
+    "username",
+    "name",
+    "uid",
+    "gid",
+    "userid",
+    "groupid",
+    "passwd",
+    "group",
+    "pwd",
+    "getpwnam",
+    "getpwuid",
+    "grp",
+    "getgrnam",
+    "getgrgid",
+    "getent"
+  ],
+  "author": "Stuart P. Bentley <s@stuartpb.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stuartpb/whomst/issues"
+  },
+  "homepage": "https://github.com/stuartpb/whomst#readme",
+  "dependencies": {
+    "execa": "^0.10.0",
+    "mz": "^2.7.0"
+  },
+  "optionalDependencies": {
+    "posix": "^4.1.2"
+  },
+  "devDependencies": {
+    "blue-tape": "^1.0.0"
+  }
+}
