@@ -185,7 +185,7 @@ function getGroupSync(name) {
         return name == r.gid ? {gid: r.gid} : {name: name, gid: r.gid};
       }
     } catch (e) {
-      return currentUserOrBust(name);
+      return null;
     }
   }
 }
