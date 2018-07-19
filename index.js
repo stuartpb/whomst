@@ -1,7 +1,6 @@
 const readFile = require('mz/fs').readFile;
 const readFileSync = require('fs').readFileSync;
 const execa = require('execa');
-const execSync = require('child_process').execSync;
 const execFileSync = require('child_process').execFileSync;
 const userInfo = require('os').userInfo;
 
@@ -117,7 +116,7 @@ function getUserSync(name) {
   } else {
     let passwd;
     try {
-      passwd = execSync('getent', ['passwd', name]);
+      passwd = execFileSync('getent', ['passwd', name]);
     } catch (e) {
       try {
         passwd = readFileSync('/etc/passwd');
@@ -141,7 +140,7 @@ function getUserSync(name) {
 function getGroup(name) {
   if (posix) {
     try {
-      return Promise.resolve(posix.getgrname(isNaN(name) ? name : +name));
+      return Promise.resolve(posix.getgrnam(isNaN(name) ? name : +name));
     }
     catch (e) {
       return Promise.resolve(null);
@@ -161,14 +160,14 @@ function getGroup(name) {
 function getGroupSync(name) {
   if (posix) {
     try {
-      return posix.getgrname(isNaN(name) ? name : +name);
+      return posix.getgrnam(isNaN(name) ? name : +name);
     } catch (e) {
       return null;
     }
   } else {
     let groupDb;
     try {
-      groupDb = execSync('getent', ['group', name]);
+      groupDb = execFileSync('getent', ['group', name]);
     } catch (e) {
       try {
         groupDb = readFileSync('/etc/group');
