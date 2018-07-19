@@ -2,6 +2,36 @@
 
 Gets user and group info, by any means necessary
 
+![whomst](https://user-images.githubusercontent.com/572196/42920811-7881652c-8acd-11e8-9a30-57c29baf9a78.jpg)
+
+## Background
+
+Node doesn't have a built-in function to resolve an OS username or groupname to
+a UID or GID (or vice versa). There are a few native modules that expose the
+functions necessary to get this information, but native modules can't always
+be relied upon (in environments where the toolchain isn't present, or the
+architecture isn't supported, or the targeted ABI is unmaintained, or any of a
+number of other possible ways native modules can break).
+
+There are other ways to get this information, but they've all got possible
+pitfalls themselves. You can query the system database with the `getent`
+binary, but that will fail if `getent` isn't present. You can try reading the
+contents of `/etc/passwd`, but that will fail if the current user doesn't have
+permission to access `/etc/passwd` (or if user IDs are coming from a different
+source, such as LDAP). You can exploit the locations in Node's code where it
+calls out to the relevant functions as a side effect (namely `process.setuid`
+and `os.userInfo`, which both incorporate `getpwnam` under the hood), but this
+requires the user to have permission to setuid to the user being queried, not
+to mention being *incredibly* hacky. (Nonetheless, this last technique is the
+approach [actually used internally by npm][uid-number].)
+
+[uid-number]: https://github.com/npm/uid-number
+
+For a program to truly be resilient against all these possible contingencies,
+it should be ready to try *all* of the possible techniques.
+
+## Implementation
+
 whomst will try obtaining info, in order of availability, from:
 
 - the `getpwnam`and `getgrnam` functions from the [posix][] module
@@ -9,12 +39,11 @@ whomst will try obtaining info, in order of availability, from:
 - the `getent(1)` binary
 - the contents of `/etc/passwd` and `/etc/group`
 - the results of doing a `setuid` or `setgid` with the given name (as used by
-  [npm][uid-number])
+  the [uid-number][] module)
 - as a last-ditch effort, seeing if the uid matches the current user's info
 
 [posix]: https://github.com/ohmu/node-posix
 [userid]: https://github.com/jandre/node-userid
-[uid-number]: https://github.com/npm/uid-number
 
 As of v0.1.2, not all of these code paths have been tested (though they are all
 believed to be implemented).
