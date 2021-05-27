@@ -1,6 +1,6 @@
 {
   "name": "whomst",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Module to get user (passwd) and group info, with lots of fallbacks",
   "main": "index.js",
   "scripts": {
@@ -35,11 +35,10 @@
   },
   "homepage": "https://github.com/stuartpb/whomst#readme",
   "dependencies": {
-    "execa": "^0.10.0",
-    "mz": "^2.7.0"
+    "execa": "^5.0.0"
   },
   "optionalDependencies": {
-    "posix": "^4.1.2"
+    "posix": "^4.2.0"
   },
   "devDependencies": {}
 }
