@@ -1,4 +1,4 @@
-const readFile = require('mz/fs').readFile;
+const readFile = require('fs').promises.readFile;
 const readFileSync = require('fs').readFileSync;
 const execa = require('execa');
 const execFileSync = require('child_process').execFileSync;
@@ -70,7 +70,7 @@ const setidHackScript = require.resolve("./setid-hack.js");
 
 function setidHack(uid, gid) {
   if (process.setuid && process.getuid) {
-    return execa.stdout(process.execPath, [setidHackScript, uid, gid])
+    return execa(process.execPath, [setidHackScript, uid, gid])
       .then(output => JSON.parse(output))
       .then(result=>{
         if (result.error) throw new Error(result.error);
@@ -96,7 +96,7 @@ function getUser(name) {
       return Promise.resolve(null);
     }
   } else {
-    return execa.stdout('getent', ['passwd', name])
+    return execa('getent', ['passwd', name])
       .catch(e=>readFile('/etc/passwd'))
       .then(dbifyPasswd)
       .then(db=>db.find(r=>r.name == name || r.uid == name))
@@ -146,7 +146,7 @@ function getGroup(name) {
       return Promise.resolve(null);
     }
   } else {
-    return execa.stdout('getent', ['group', name])
+    return execa('getent', ['group', name])
       .catch(e=>readFile('/etc/group'))
       .then(dbifyGroup)
       .then(db=>db.find(r=>r.name == name || r.gid == name))
