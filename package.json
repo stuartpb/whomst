@@ -35,7 +35,7 @@
   },
   "homepage": "https://github.com/stuartpb/whomst#readme",
   "dependencies": {
-    "execa": "^0.10.0",
+    "execa": "^7.1.1",
     "mz": "^2.7.0"
   },
   "optionalDependencies": {
